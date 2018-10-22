@@ -131,6 +131,10 @@ public class PlayerController : MonoBehaviour {
         {
             GetComponent<AudioSource>().PlayOneShot(coinSound);
             other.gameObject.SetActive(false);
+        } else if (other.gameObject.CompareTag("CoinBox"))
+        {
+            Debug.Log("TEST");
+            GetComponent<AudioSource>().PlayOneShot(coinSound);
         }
     }
 
