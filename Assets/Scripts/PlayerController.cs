@@ -54,6 +54,11 @@ public class PlayerController : MonoBehaviour {
     // Update is called once per frame
     void FixedUpdate () {
 
+        if (Input.GetKey("escape"))
+        {
+            Application.Quit();
+        }
+
         float moveHorizontal = Input.GetAxis("Horizontal");
 
         Vector3 easeVelocity = rb2d.velocity;
