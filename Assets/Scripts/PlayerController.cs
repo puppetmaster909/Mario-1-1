@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
@@ -7,9 +8,11 @@ public class PlayerController : MonoBehaviour {
     private Rigidbody2D rb2d;
     private Animator anim;
     private bool facingRight = true;
+    private int coinCount;
 
     public float speed;
     public float jumpForce;
+    public Text coinText;
 
     //ground check
     private bool isOnGround;
@@ -39,13 +42,8 @@ public class PlayerController : MonoBehaviour {
     void Start () {
         rb2d = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-    }
-
-    void Awake()
-    {
-
-       // source = GetComponent<AudioSource>();
-
+        coinCount = 0;
+        SetCountText();
     }
 
     private void Update(){
@@ -112,6 +110,7 @@ public class PlayerController : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.W))
         {
             anim.SetTrigger("jump");
+            GetComponent<AudioSource>().PlayOneShot(jumpSmallSound);
         }
 
     }
@@ -131,10 +130,8 @@ public class PlayerController : MonoBehaviour {
         {
             GetComponent<AudioSource>().PlayOneShot(coinSound);
             other.gameObject.SetActive(false);
-        } else if (other.gameObject.CompareTag("CoinBox"))
-        {
-            Debug.Log("TEST");
-            GetComponent<AudioSource>().PlayOneShot(coinSound);
+            coinCount++;
+            SetCountText();
         }
     }
 
@@ -157,4 +154,15 @@ public class PlayerController : MonoBehaviour {
             }
         }
     }
+
+    public void SetCountText()
+    {
+        coinText.text = "Coins: " + coinCount.ToString();
+    }
+
+    public void addCoin()
+    {
+        coinCount++;
+    }
+
 }

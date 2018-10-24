@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class CoinBlockScript : MonoBehaviour {
     private Animator anim;
-
+    private SpriteRenderer spriteRenderer;
     private bool playerHit;
-    private bool justHit;
 
     public Transform playerHitBox;
     public LayerMask isPlayer;
+    public AudioClip coinSound;
+    public AudioClip bumpSound;
+    public Sprite deadSprite;
 
     public float wallHitHeight;
     public float wallHitWidth;
@@ -19,9 +21,7 @@ public class CoinBlockScript : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-
-        //anim = GetComponent<Animator>();
-        justHit = false;
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
@@ -35,14 +35,20 @@ public class CoinBlockScript : MonoBehaviour {
     {
         playerHit = Physics2D.OverlapBox(playerHitBox.position, new Vector2(wallHitWidth, wallHitHeight), 0, isPlayer);
 
-        if (playerHit == true && numCoins > 0 && justHit == false)
+        if (playerHit == true && numCoins > 0)
         {
             numCoins -= 1;
-            
+            GetComponent<AudioSource>().PlayOneShot(coinSound);
+            collision.gameObject.GetComponent<PlayerController>().addCoin();
+            collision.gameObject.GetComponent<PlayerController>().SetCountText();
+            if (numCoins == 0)
+            {
+                spriteRenderer.sprite = deadSprite;
+            }
         }
         else if (playerHit == true && numCoins == 0)
         {
-            //anim.SetBool("emptyBlock", true);
+            GetComponent<AudioSource>().PlayOneShot(bumpSound);
             
         }
 
@@ -52,12 +58,6 @@ public class CoinBlockScript : MonoBehaviour {
     {
         Gizmos.color = Color.red;
         Gizmos.DrawCube(playerHitBox.position, new Vector3(wallHitWidth, wallHitHeight, 1));
-    }
-
-    IEnumerator turnOffJustHit(float time)
-    {
-        yield return new WaitForSeconds(time);
-        
     }
 
 }
